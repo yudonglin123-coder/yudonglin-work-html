@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青岛 - 我的海边家乡</title>
+    <style>
+        /* 基础重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 顶部横幅区域 —— 封面图片高度不变 (450px 保持原样) */
+        .hero {
+            position: relative;
+            height: 450px;            /* 封面图片区域高度不变 */
+            /* 使用你提供的海鸥栈桥图作为封面 */
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('cover.jpg') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 40px;
+            color: #fff;
+        }
+
+        .hero-text {
+            max-width: 800px;
+        }
+
+        .hero-text .subtitle {
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .hero-text h1 {
+            font-size: 64px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            opacity: 0.95;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+        }
+
+        /* 导航栏 — 高度变为原来的1.5倍 (原15px→22.5px) */
+        .navbar {
+            background-color: #2c3e50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 22.5px 0;          /* 原15px * 1.5 */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 30px;
+            font-size: 16px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .navbar a:hover, .navbar a.active {
+            color: #f1c40f;
+            border-bottom-color: #f1c40f;
+        }
+
+        /* 主内容区域 — 上下内边距变为原来的1.5倍 (原40px 20px → 60px 30px) */
+        .main-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 30px;         /* 原40px 20px * 1.5 */
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;         /* 原40px * 1.5 */
+        }
+
+        .section-header .en {
+            font-size: 12px;
+            letter-spacing: 6px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .section-header h2 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;         /* 原10px * 1.5 */
+        }
+
+        .section-desc {
+            max-width: 700px;
+            margin: 0 auto 75px auto;    /* 原50px * 1.5 */
+            text-align: center;
+            color: #555;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* 卡片网格 — 间隙变为原来的1.5倍 (原30px → 45px) */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 45px;                  /* 原30px * 1.5 */
+        }
+
+        /* 卡片 — 整体高度内边距、字体等已通过内边距影响高度，但卡片本身高度由内容决定；
+           为了体现“高度变成原来的1.5倍”，我们调整内部元素内边距与图片高度。
+           注意：封面图片（card-img）不属于封面(cover)图片，它是卡片中的景点图片，
+           这里“除了封面图片”指顶部hero封面图，卡片图片可调整。 */
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* 卡片图片高度变为原来的1.5倍 (原220px → 330px) */
+        .card-img {
+            width: 100%;
+            height: 330px;              /* 原220px * 1.5 */
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        /* 卡片内容内边距变为原来的1.5倍 (原20px → 30px) */
+        .card-body {
+            padding: 30px;              /* 原20px * 1.5 */
+        }
+
+        .card-body .tag {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 7.5px;       /* 原5px * 1.5 */
+            display: block;
+        }
+
+        .card-body h3 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 15px;        /* 原10px * 1.5 */
+        }
+
+        .card-body p {
+            font-size: 14px;
+            color: #666;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 弹窗样式 — 内边距、图片高度、标题等均做1.5倍调整（封面图片指hero封面，弹窗图片可调） */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #fff;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 弹窗头部内边距变为原来的1.5倍 (原15px 20px → 22.5px 30px) */
+        .modal-header {
+            background: #2c3e50;
+            color: #fff;
+            padding: 22.5px 30px;       /* 原15px 20px * 1.5 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #ecf0f1;
+            background: none;
+            border: none;
+        }
+
+        .close-btn:hover {
+            color: #f1c40f;
+        }
+
+        /* 弹窗主体内边距变为原来的1.5倍 (原20px → 30px) */
+        .modal-body {
+            padding: 30px;              /* 原20px * 1.5 */
+        }
+
+        /* 弹窗内图片高度变为原来的1.5倍 (原280px → 420px) */
+        .modal-body img {
+            width: 100%;
+            height: 420px;              /* 原280px * 1.5 */
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 22.5px;      /* 原15px * 1.5 */
+            background-color: #ddd;
+        }
+
+        .modal-body p {
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 15px;        /* 原10px * 1.5 */
+            text-indent: 2em;
+        }
+
+        /* 页面切换时的隐藏与显示 */
+        .page-section {
+            display: block;
+        }
+
+        .page-section.hidden {
+            display: none;
+        }
+
+        /* 城市印象页面样式 — 高度相关均1.5倍 */
+        .city-page {
+            max-width: 900px;
+            margin: 90px auto;          /* 原60px * 1.5 */
+            background: #fff;
+            padding: 60px;              /* 原40px * 1.5 */
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .city-page h1 {
+            font-size: 36px;
+            color: #2c3e50;
+            border-bottom: 3px solid #f1c40f;
+            display: inline-block;
+            padding-bottom: 15px;       /* 原10px * 1.5 */
+            margin-bottom: 45px;        /* 原30px * 1.5 */
+        }
+
+        .city-page p {
+            font-size: 16px;
+            line-height: 2;
+            color: #555;
+            margin-bottom: 30px;        /* 原20px * 1.5 */
+            text-indent: 2em;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 45px;           /* 原30px * 1.5 */
+            padding: 15px 37.5px;       /* 原10px 25px * 1.5 */
+            background: #2c3e50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #f1c40f;
+            color: #2c3e50;
+        }
+
+        /* 响应式调整 — 在移动端保持比例，但hero封面高度不变，其他元素按1.5倍逻辑已定义，这里仅调整字号和导航换行 */
+        @media (max-width: 768px) {
+            .hero-text h1 { font-size: 40px; }
+            .hero { height: 300px; }    /* 注意：原代码移动端封面高度300px，保持原样，不算在“除封面图片外”的调整范围 */
+            .navbar { flex-wrap: wrap; padding: 15px 0; } /* 移动端可适当缩小避免溢出 */
+            .navbar a { margin: 5px 10px; font-size: 14px; }
+            /* 卡片图片和弹窗图片在移动端可稍小，但无需严格1.5倍，已满足需求 */
+            .card-img { height: 240px; } /* 移动端适当缩小，保证美观，不影响“高度变为1.5倍”的整体感 */
+            .modal-body img { height: 260px; }
+        }
+
+        /* 额外：确保其他容器如内联样式中的margin-bottom也按1.5倍调整 */
+        /* 内联样式在html中直接使用了margin-bottom:60px; 我们将其覆盖为90px，为了统一 */
+        #scenic, #food, #entertainment {
+            margin-bottom: 90px !important;  /* 原60px * 1.5 */
+        }
+        /* 标题内联样式 margin-bottom:30px → 45px */
+        #scenic h2, #food h2, #entertainment h2 {
+            margin-bottom: 45px !important;  /* 原30px * 1.5 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 首页区域 -->
+    <div id="homePage" class="page-section">
+        <!-- 横幅：封面图片高度保持不变（450px） -->
+        <header class="hero">
+            <div class="hero-text">
+                <div class="subtitle">My Hometown · Shandong</div>
+                <h1>青岛</h1>
+                <p>红瓦绿树，碧海蓝天 —— 我的海边家乡</p>
+            </div>
+        </header>
+
+        <!-- 导航 -->
+        <nav class="navbar">
+            <a href="#" class="active" onclick="showHome(event)">首页</a>
+            <a href="#" onclick="scrollToSection('scenic')">景点介绍</a>
+            <a href="#" onclick="scrollToSection('food')">青岛味道</a>
+            <a href="#" onclick="showCityPage(event)">城市印象</a>
+            <a href="#" onclick="scrollToSection('entertainment')">青岛娱乐项目</a>
+        </nav>
+
+        <!-- 主内容 -->
+        <main class="main-content">
+            <!-- 标题区 -->
+            <div class="section-header">
+                <div class="en">A CITY BY THE SEA</div>
+                <h2>山海相拥的青岛</h2>
+            </div>
+            <p class="section-desc">
+                青岛坐落在山东半岛南部，海湾、山峦与老街巷交织出独特的城市风景。清晨可以沿海看日出，午后漫步红瓦绿树之间，傍晚再去尝一口鲜美的海味——这就是我熟悉又喜欢的家乡。
+            </p>
+
+            <!-- 景点介绍区 (内联margin-bottom已用css覆盖为90px) -->
+            <div id="scenic">
+                <h2>📸 景点介绍</h2>
+                <div class="grid">
+                    <!-- 栈桥 -->
+                    <div class="card" onclick="openModal('zhanqiao')">
+                        <img class="card-img" src="zhanqiao.jpg" alt="栈桥">
+                        <div class="card-body">
+                            <span class="tag">海湾漫步</span>
+                            <h3>栈桥</h3>
+                            <p>伸向海中的长桥是青岛熟悉的地标。沿着木栈道慢慢走，看海鸥掠过海面，也能远望回澜阁。</p>
+                        </div>
+                    </div>
+                    <!-- 崂山 -->
+                    <div class="card" onclick="openModal('laoshan')">
+                        <img class="card-img" src="laoshan.jpg" alt="崂山">
+                        <div class="card-body">
+                            <span class="tag">山海胜境</span>
+                            <h3>崂山</h3>
+                            <p>崂山面海而立，山石、松林与云雾构成清朗的山海景致。登高远眺，青峰与大海尽收眼底。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 青岛味道 (美食) -->
+            <div id="food">
+                <h2>🍽️ 青岛味道</h2>
+                <div class="grid">
+                    <!-- 青岛啤酒 -->
+                    <div class="card" onclick="openModal('beer')">
+                        <img class="card-img" src="beer.jpg" alt="青岛啤酒">
+                        <div class="card-body">
+                            <span class="tag">畅饮</span>
+                            <h3>青岛啤酒</h3>
+                            <p>百年酿造工艺，泡沫细腻，麦香浓郁。配上烧烤，是青岛夏夜最地道的打开方式。</p>
+                        </div>
+                    </div>
+                    <!-- 辣炒蛤蜊 -->
+                    <div class="card" onclick="openModal('seafood')">
+                        <img class="card-img" src="seafood.jpg" alt="海鲜">
+                        <div class="card-body">
+                            <span class="tag">鲜味</span>
+                            <h3>辣炒蛤蜊</h3>
+                            <p>红岛蛤蜊皮薄肉嫩，配以干辣椒爆炒，鲜辣开胃，是青岛人餐桌上的常客。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 青岛娱乐项目 -->
+            <div id="entertainment">
+                <h2>🎡 青岛娱乐项目</h2>
+                <div class="grid">
+                    <!-- 奥帆中心 -->
+                    <div class="card" onclick="openModal('sailing')">
+                        <img class="card-img" src="sailing.jpg" alt="帆船">
+                        <div class="card-body">
+                            <span class="tag">海上运动</span>
+                            <h3>奥帆中心帆船体验</h3>
+                            <p>在2008年奥运会帆船比赛场地，亲自体验驾驭帆船的乐趣，感受海风与浪花。</p>
+                        </div>
+                    </div>
+                    <!-- 金沙滩 -->
+                    <div class="card" onclick="openModal('goldenbeach')">
+                        <img class="card-img" src="beach.jpg" alt="金沙滩">
+                        <div class="card-body">
+                            <span class="tag">休闲度假</span>
+                            <h3>金沙滩</h3>
+                            <p>沙质细腻，色泽如金。这里不仅是游泳胜地，更是举办沙滩音乐节和啤酒节的热门场地。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 城市印象详情页 (隐藏，点击后显示) -->
+    <div id="cityPage" class="page-section hidden">
+        <div class="city-page">
+            <h1>🏙️ 青岛 · 城市印象</h1>
+            <p>青岛，一座融合了山海灵气与欧陆风情的城市。这里的人文风情，既有北方的豪爽大气，又带着海洋的开放包容。</p>
+            <p>走在老城区，你会看到红瓦绿树间点缀着德式建筑，仿佛穿越回百年前。八大关的每一条街道都种着不同的花木，四季皆景。青岛人热情好客，夏天傍晚，街头巷尾满是拎着塑料袋装散啤的人们，这是独属于青岛的市井浪漫。</p>
+            <p>这里是中国帆船之都，也是电影之都。每年夏天的国际啤酒节，让整座城市沉浸在狂欢的泡沫中。青岛话里透着直爽与幽默，青岛的海风里带着咸咸的鲜味。这是一座来了就不想走的城市，一座真正“山海相拥”的故乡。</p>
+            <button class="back-btn" onclick="showHome(event)">← 返回首页</button>
+        </div>
+    </div>
+
+    <!-- 通用弹窗 -->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">标题</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 内容动态插入 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 数据对象：包含每个卡片的详细信息 (图片路径已改为本地文件名)
+        const details = {
+            zhanqiao: {
+                title: '栈桥',
+                img: 'zhanqiao.jpg',
+                text: '栈桥是青岛最早的码头，始建于清光绪年间，全长440米，宽8米。桥身从海岸探入如弯月般的青岛湾深处，尽头是两层八角楼“回澜阁”。漫步栈桥之上，可欣赏层层海浪，远眺小青岛。退潮时，桥两侧的礁石露出，是赶海拾贝的好去处。每年秋冬，成千上万只海鸥在此盘旋飞舞，成为青岛最灵动的风景线。'
+            },
+            laoshan: {
+                title: '崂山',
+                img: 'laoshan.jpg',
+                text: '崂山是中国海岸线第一高峰，有着“海上第一名山”之称。它耸立在黄海之滨，高大雄伟。当地有一句古语：“泰山虽云高，不如东海崂。”崂山不仅有壮丽的山海奇观，更是道教发祥地之一。太清宫、上清宫等道教建筑掩映在苍松翠柏之中。登顶巨峰，极目远眺，海天一色，令人心旷神怡。'
+            },
+            beer: {
+                title: '青岛啤酒',
+                img: 'beer.jpg',
+                text: '青岛啤酒始创于1903年，是中国历史最悠久的啤酒品牌之一。它选用优质大麦、大米、上等啤酒花和崂山矿泉水酿造，泡沫洁白细腻，酒液清澈金黄，口感清爽醇厚。在青岛，喝啤酒是一种生活方式——夏天的塑料袋装散啤、街边的烧烤摊、一年一度的青岛国际啤酒节，都是这座城市独特的啤酒文化符号。'
+            },
+            seafood: {
+                title: '辣炒蛤蜊',
+                img: 'seafood.jpg',
+                text: '辣炒蛤蜊是青岛最经典的特色小吃之一。青岛人管蛤蜊叫“gá la”，红岛出产的蛤蜊皮薄肉肥、味道鲜美。做法看似简单：热油爆香干辣椒、葱姜蒜，倒入吐净沙子的蛤蜊大火爆炒，待蛤蜊开口即可。出锅时鲜辣扑鼻，蛤肉嫩滑多汁，配上一扎冰镇青岛啤酒，便是最地道的青岛味道。'
+            },
+            sailing: {
+                title: '奥帆中心帆船体验',
+                img: 'sailing.jpg',
+                text: '青岛奥帆中心是2008年北京奥运会帆船比赛的举办地。如今，这里不仅是著名的旅游景点，更是帆船爱好者的天堂。游客可以在专业教练的指导下，亲自登上帆船，体验升帆、掌舵的乐趣。当帆船驶出浮山湾，迎着海风破浪前行，从海上回望青岛的城市天际线，会给你带来完全不同的视角和震撼。'
+            },
+            goldenbeach: {
+                title: '金沙滩',
+                img: 'beach.jpg',
+                text: '金沙滩位于青岛西海岸新区，南濒黄海，呈月牙形东西伸展，全长3500多米，宽300米。因为沙质细腻、色泽金黄而得名。这里水清滩平，海浪轻柔，是青岛最好的天然海水浴场之一。每年夏季，金沙滩会举办盛大的文化旅游节和沙滩音乐节。此外，这里也是观赏海上日出的绝佳地点，清晨看着太阳从海平面升起，非常浪漫。'
+            }
+        };
+
+        // 打开弹窗
+        function openModal(key) {
+            const data = details[key];
+            if (data) {
+                document.getElementById('modalTitle').innerText = data.title;
+                document.getElementById('modalBody').innerHTML = `
+                    <img src="${data.img}" alt="${data.title}">
+                    <p>${data.text}</p>
+                `;
+                document.getElementById('modal').style.display = 'flex';
+            }
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // 点击遮罩关闭弹窗
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // 显示城市印象页面
+        function showCityPage(event) {
+            if(event) event.preventDefault();
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('cityPage').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // 显示首页
+        function showHome(event) {
+            if(event) event.preventDefault();
+            document.getElementById('cityPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+        }
+
+        // 平滑滚动到指定区域
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
+```
